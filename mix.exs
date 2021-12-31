@@ -74,7 +74,8 @@ defmodule RtlSdrHomebridge.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:qol_up, "~> 1.1"}
+      {:qol_up, "~> 1.1"},
+      {:json, "~> 1.4"}
     ]
   end
 end
