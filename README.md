@@ -1,21 +1,20 @@
-# RtlSdrHomebridge
+# RTL-SDR Homebridge
 
-**TODO: Add description**
+Bridge between RTL-SDR and Homebridge; particularly the homebridge mqttthing plugin. This program will listen to 
+radio transmissions with a RTL-SDR, interpret them, and convert that data into publications on a MQTT bus so that
+Homebridge can receive data from RF devices that have well-understood protocols but lack an interface to 
+Homebridge.
 
-## Installation
+Currently, the only supported radio protocol is Honeywell's 345MHz system that is used by numerous Honeywell and 
+Ademco alarm panel systems.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `rtl_sdr_homebridge` to your list of dependencies in `mix.exs`:
+## Dependencies
+Before rtl-sdr homebridge will work, the following must be installed:
 
-```elixir
-def deps do
-  [
-    {:rtl_sdr_homebridge, "~> 0.1.0"}
-  ]
-end
-```
+* [Homebridge](https://homebridge.io)
+* [Homebridge mqttthing plugin](https://github.com/arachnetech/homebridge-mqttthing) (this can be installed through the Homebridge GUI)
+* [RTL-SDR](https://www.rtl-sdr.com) device
+* [rtl_433](https://github.com/merbanan/rtl_433.git)
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/rtl_sdr_homebridge>.
-
+## Configuration
+TODO: add configuration instructions.

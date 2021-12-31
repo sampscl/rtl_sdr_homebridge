@@ -1,7 +1,12 @@
 defmodule RtlSdrHomebridge.Honeywell345.Worker do
   @moduledoc """
-  Honeywell 345 worker; listens on a rtl-sdr for honeywell
-  345MHz messages and publishes them.
+   Honeywell 345 worker; listens on a rtl-sdr for honeywell
+   345MHz messages and publishes them. This uses the rtl_433 program (see README.md) to interface with the radio.
+
+   rtl_433 example output from honeywell `rtl_433 -f 344940000 -F json -R 70`:
+   ```json
+   {"time" : "2021-03-20 11:47:16", "model" : "Honeywell-Security", "id" : 125008, "channel" : 8, "event" : 52, "state" : "closed", "contact_open" : 0, "reed_open" : 1, "alarm" : 1, "tamper" : 0, "battery_ok" : 1, "heartbeat" : 1}
+   ```
   """
 
   use GenServer
@@ -103,16 +108,18 @@ defmodule RtlSdrHomebridge.Honeywell345.Worker do
 
   def process_lines(state, []), do: state
 
-  def process_lines(state, [_line | rest]) do
-    # zone_def = Utils.Json.decode!(line)
-    # id = zone_def["id"]
-    # name = zone_def["name"]
-    # type = zone_def["type"]
-    # perimeter = zone_def["perimeter"]
+  def process_lines(state, [line | rest]) do
+    zone_msg = Jason.decode!(line)
+    zone_id = zone_msg["id"]
 
-    # zone = ~M{%Config.Manager.Zone id, name, type, perimeter}
-    # QolUp.LoggerUtils.info("zone discovery: #{inspect(~M{zone}, pretty: true)}")
-    # PubSub.pub_zone_discovery(~M{%PubSub.ZoneDiscovery zone})
+    with {:ok, zone_state} <- Map.fetch(zone_msg, "state"),
+         {:ok, zone_tamper} <- Map.fetch(zone_msg, "tamper"),
+         {:ok, zone_battery_ok} <- Map.fetch(zone_msg, "battery_ok") do
+      L.locals()
+    else
+      _ ->
+        L.debug("Missing field in zone_msg: #{inspect(zone_msg, pretty: true)}")
+    end
 
     process_lines(state, rest)
   end
