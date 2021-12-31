@@ -51,8 +51,7 @@ defmodule RtlSdrHomebridge.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {RtlSdrHomebridge.Application, []}
-
+      mod: {RtlSdrHomebridge, []}
     ]
   end
 
@@ -75,7 +74,7 @@ defmodule RtlSdrHomebridge.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:qol_up, "~> 1.1"},
+      {:qol_up, "~> 1.1"}
     ]
   end
 end
