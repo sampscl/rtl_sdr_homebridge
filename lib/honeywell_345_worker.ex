@@ -110,12 +110,12 @@ defmodule RtlSdrHomebridge.Honeywell345.Worker do
 
   def process_lines(state, [line | rest]) do
     zone_msg = Jason.decode!(line)
-    zone_id = zone_msg["id"]
 
-    with {:ok, zone_state} <- Map.fetch(zone_msg, "state"),
+    with {:ok, zone_id} <- Map.fetch(zone_msg, "id"),
+         {:ok, zone_state} <- Map.fetch(zone_msg, "state"),
          {:ok, zone_tamper} <- Map.fetch(zone_msg, "tamper"),
          {:ok, zone_battery_ok} <- Map.fetch(zone_msg, "battery_ok") do
-      L.locals()
+      RtlSdrHomebridge.BusInterface.pub_zone_state(zone_id, zone_state, zone_tamper, zone_battery_ok)
     else
       _ ->
         L.debug("Missing field in zone_msg: #{inspect(zone_msg, pretty: true)}")
