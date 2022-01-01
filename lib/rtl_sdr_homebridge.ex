@@ -9,8 +9,15 @@ defmodule RtlSdrHomebridge do
 
   @doc false
   def children do
+    mqtt_host = Application.get_env(:rtl_sdr_homebridge, :mqtt_host)
+    mqtt_port = Application.get_env(:rtl_sdr_homebridge, :mqtt_port)
+
     core_children = [
-      RtlSdrHomebridge.BusInterface.child_spec(:ok)
+      Tortoise.Connection.child_spec(
+        client_id: RtlSdrHomebridge,
+        server: {Tortoise.Transport.Tcp, host: mqtt_host, port: mqtt_port},
+        handler: {Tortoise.Handler.Logger, []}
+      )
     ]
 
     configured_children =

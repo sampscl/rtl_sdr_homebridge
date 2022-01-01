@@ -78,7 +78,8 @@ defmodule RtlSdrHomebridge.MixProject do
       {:qol_up, "~> 1.1"},
       {:json, "~> 1.4"},
       {:line_buffer, "~> 1.0"},
-      {:executus, "~>0.6"}
+      {:executus, "~>0.6"},
+      {:tortoise, "~>0.10"}
     ]
   end
 end

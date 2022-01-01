@@ -8,4 +8,6 @@ config :rtl_sdr_homebridge,
     49183 => %{
       name: "Deck Door"
     }
-  }
+  },
+  mqtt_host: "192.168.58.150",
+  mqtt_port: 1883

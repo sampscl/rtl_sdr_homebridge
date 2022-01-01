@@ -79,7 +79,7 @@ defmodule RtlSdrHomebridge.Honeywell345.Worker do
   @impl GenServer
   def handle_info({dead_pid, :result, result}, state) do
     L.info("Pid #{inspect(dead_pid)} exited: #{inspect(result, pretty: true)}")
-    Process.send_after(self(), :init_radio, 5_000)
+    # Process.send_after(self(), :init_radio, 5_000)
     {:noreply, %State{state | pid: nil}}
   end
 
@@ -109,16 +109,15 @@ defmodule RtlSdrHomebridge.Honeywell345.Worker do
   def process_lines(state, []), do: state
 
   def process_lines(state, [line | rest]) do
-    zone_msg = Jason.decode!(line)
-
-    with {:ok, zone_id} <- Map.fetch(zone_msg, "id"),
+    with {:ok, zone_msg} <- JSON.decode(line),
+         {:ok, zone_id} <- Map.fetch(zone_msg, "id"),
          {:ok, zone_state} <- Map.fetch(zone_msg, "state"),
          {:ok, zone_tamper} <- Map.fetch(zone_msg, "tamper"),
          {:ok, zone_battery_ok} <- Map.fetch(zone_msg, "battery_ok") do
       RtlSdrHomebridge.BusInterface.pub_zone_state(zone_id, zone_state, zone_tamper, zone_battery_ok)
     else
-      _ ->
-        L.debug("Missing field in zone_msg: #{inspect(zone_msg, pretty: true)}")
+      error ->
+        L.debug("Error: #{inspect(error, pretty: true)} parsing: #{inspect(line, pretty: true)}")
     end
 
     process_lines(state, rest)
