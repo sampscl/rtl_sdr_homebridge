@@ -25,6 +25,7 @@ defmodule RtlSdrHomebridge.MixProject do
       version: version(),
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
+      preferred_cli_env: [espec: :test],
       deps: deps(),
       aliases: aliases(),
       # this makes dialyzer include mix behaviors in the PLT so that
@@ -51,8 +52,7 @@ defmodule RtlSdrHomebridge.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {RtlSdrHomebridge.Application, []}
-
+      mod: {RtlSdrHomebridge, []}
     ]
   end
 
@@ -76,6 +76,10 @@ defmodule RtlSdrHomebridge.MixProject do
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:qol_up, "~> 1.1"},
+      {:json, "~> 1.4"},
+      {:line_buffer, "~> 1.0"},
+      {:executus, "~>0.6"},
+      {:tortoise, "~>0.10"}
     ]
   end
 end
