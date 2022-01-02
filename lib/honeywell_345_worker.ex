@@ -114,7 +114,7 @@ defmodule RtlSdrHomebridge.Honeywell345.Worker do
          {:ok, zone_state} <- Map.fetch(zone_msg, "state"),
          {:ok, zone_tamper} <- Map.fetch(zone_msg, "tamper"),
          {:ok, zone_battery_ok} <- Map.fetch(zone_msg, "battery_ok") do
-      RtlSdrHomebridge.BusInterface.pub_zone_state(zone_id, zone_state, zone_tamper, zone_battery_ok)
+      RtlSdrHomebridge.BusInterface.pub_zone_state("honeywell_345", zone_id, zone_state, zone_tamper, zone_battery_ok)
     else
       error ->
         L.debug("Error: #{inspect(error, pretty: true)} parsing: #{inspect(line, pretty: true)}")

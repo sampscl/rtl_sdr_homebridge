@@ -17,7 +17,8 @@ defmodule RtlSdrHomebridge do
         client_id: RtlSdrHomebridge,
         server: {Tortoise.Transport.Tcp, host: mqtt_host, port: mqtt_port},
         handler: {Tortoise.Handler.Logger, []}
-      )
+      ),
+      RtlSdrHomebridge.DeviceAccumulator.Worker.child_spec(:ok)
     ]
 
     configured_children =
