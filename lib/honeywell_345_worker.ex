@@ -90,7 +90,6 @@ defmodule RtlSdrHomebridge.Honeywell345.Worker do
   @spec do_handle_stdout(State.t(), binary()) :: State.t()
   @doc false
   def do_handle_stdout(%State{stdout_lb: stdout_lb} = state, data) do
-    L.debug("rtl_433 reports: #{inspect(data, pretty: true)}")
     {updated_stdout_lb, lines} = LineBuffer.add_data(stdout_lb, data)
     process_lines(%State{state | stdout_lb: updated_stdout_lb}, lines)
   end
