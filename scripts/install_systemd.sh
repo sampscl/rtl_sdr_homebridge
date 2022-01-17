@@ -19,7 +19,7 @@ if [ ! -f ${archive} ]; then
   exit 1
 fi
 
-echo "User account..."
+echo "User account ${appuser}..."
 useradd -M -s /usr/sbin/nologin ${appuser}
 mkdir -p ${appdir}
 chown -R ${appuser}:${appuser} ${appdir}
@@ -50,4 +50,12 @@ WantedBy=multi-user.target
 EOT
 
 chmod 640 ${appdir}/${service_name}.service
+
+chown -R ${appuser}:${appuser} ${appdir}
+
+echo "Enabling service"
+systemctl enable ${appdir}/${service_name}.service
+systemctl daemon-reload
+systemctl start ${appdir}/${service_name}.service
+
 echo "Done"
