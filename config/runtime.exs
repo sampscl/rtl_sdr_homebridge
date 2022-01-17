@@ -7,7 +7,7 @@ config :rtl_sdr_homebridge,
   },
 
   # The hostname or IP address of the MQTT broker (you must have MQTT installed)
-  mqtt_host: "192.168.58.150",
+  mqtt_host: "127.0.0.1",
 
   # The port number of the MQTT broker; typically this should be left alone at 1883
   mqtt_port: 1883
