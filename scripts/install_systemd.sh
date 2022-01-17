@@ -25,12 +25,12 @@ usermod -a -G plugdev ${appuser}
 mkdir -p ${appdir}
 chown -R ${appuser}:${appuser} ${appdir}
 
-echo "Extracting files to ${appdir}..."
-tar -zx --overwrite -C ${appdir} -f ${archive}
-
 echo "Stopping old services..."
 systemctl disable ${service_name}.service 2>/dev/null
 systemctl stop ${service_name}.service 2>/dev/null
+
+echo "Extracting files to ${appdir}..."
+tar -zx --overwrite -C ${appdir} -f ${archive}
 
 echo "Installing service file ${appdir}/${service_name}.service..."
 
