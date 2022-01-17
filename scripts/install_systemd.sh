@@ -42,8 +42,8 @@ After=network-online.target
 [Service]
 Environment="SHELL=/bin/bash"
 User=${appuser}
-WorkingDirectory=${appdir}
-ExecStart=${appdir}/bin/${app_name} foreground
+WorkingDirectory=${appdir}/${app_name}
+ExecStart=${appdir}/${app_name}/bin/${app_name} foreground
 
 [Install]
 WantedBy=multi-user.target
