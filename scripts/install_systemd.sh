@@ -59,4 +59,6 @@ systemctl enable ${appdir}/${service_name}.service
 systemctl daemon-reload
 systemctl start ${service_name}.service
 
+echo "!!! Edit runtime.exs file to set the MQTT configuration !!!"
+
 echo "Done"

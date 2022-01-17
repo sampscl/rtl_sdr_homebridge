@@ -12,6 +12,8 @@ defmodule RtlSdrHomebridge do
     mqtt_host = Application.get_env(:rtl_sdr_homebridge, :mqtt_host)
     mqtt_port = Application.get_env(:rtl_sdr_homebridge, :mqtt_port)
 
+    L.info("mqtt_host: ${mqtt_host}, mqtt_port: ${mqtt_port}")
+
     core_children = [
       Tortoise.Connection.child_spec(
         client_id: RtlSdrHomebridge,
