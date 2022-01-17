@@ -21,6 +21,7 @@ fi
 
 echo "User account ${appuser}..."
 useradd -M -s /usr/sbin/nologin ${appuser}
+usermod -a -G plugdev ${appuser}
 mkdir -p ${appdir}
 chown -R ${appuser}:${appuser} ${appdir}
 
