@@ -43,7 +43,7 @@ After=network-online.target
 Environment="SHELL=/bin/bash"
 User=${appuser}
 WorkingDirectory=${appdir}/${app_name}
-ExecStart=${appdir}/${app_name}/bin/${app_name} foreground
+ExecStart=${appdir}/${app_name}/bin/${app_name} start
 
 [Install]
 WantedBy=multi-user.target
