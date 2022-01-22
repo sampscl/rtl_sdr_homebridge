@@ -6,25 +6,73 @@ on:
   pull_request:
     branches: [$default-branch]
 jobs:
-  build:
-    name: Build and test
+  prep:
     runs-on: ubuntu-latest
+    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    strategy:
+      matrix: &platform-matrix
+        otp: ["24.2"]
+        elixir: ["1.13.2"]
+        os: ["ubuntu-latest"]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Elixir
-        uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+      - uses: erlef/setup-beam@v1
         with:
-          elixir-version: "1.13.2" # Define the elixir version [required]
-          otp-version: "24.2" # Define the OTP version [required]
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+  build:
+    runs-on: ${{ matrix.os }}
+    name: Build
+    needs: prep
+    strategy:
+      matrix:
+        <<: *platform-matrix
+        mix_env: ["dev", "test", "prod"]
+    steps:
+      - uses: actions/checkout@v2
       - name: Restore dependencies cache
         uses: actions/cache@v2
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-
+          key: ${{ runner.os }}-mix-${{ matrix.mix_env }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-${{ matrix.mix_env }}
       - name: Install dependencies
-        run: mix deps.get
+        run: MIX_ENV=${{ matrix.mix_env }} mix deps.get
+      - name: Build
+        run: MIX_ENV=${{ matrix.mix_env }} mix compile
+  credo_compliance:
+    runs-on: ${{ matrix.os }}
+    name: Credo Compliance
+    needs: build
+    strategy:
+      matrix:
+        <<: *platform-matrix
+        mix_env: ["dev", "test", "prod"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Restore dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-dev-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-dev
       - name: Compliance check
-        run: mix credo
-      - name: Run tests
-        run: mix espec
+        run: MIX_ENV=dev mix credo
+  dialyer_compliance:
+    runs-on: ${{ matrix.os }}
+    name: Dialyzer Compliance
+    needs: build
+    strategy:
+      matrix:
+        <<: *platform-matrix
+        mix_env: ["dev", "test", "prod"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Restore dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-dev-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-dev
+      - name: Compliance check
+        run: MIX_ENV=dev mix dialyzer
