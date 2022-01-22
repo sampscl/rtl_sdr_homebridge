@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     strategy:
-      matrix: &platform-matrix
+      matrix:
         otp: ["24.2"]
         elixir: ["1.13.2"]
         os: ["ubuntu-latest"]
@@ -26,7 +26,9 @@ jobs:
     needs: prep
     strategy:
       matrix:
-        <<: *platform-matrix
+        otp: ["24.2"]
+        elixir: ["1.13.2"]
+        os: ["ubuntu-latest"]
         mix_env: ["dev", "test", "prod"]
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +48,9 @@ jobs:
     needs: build
     strategy:
       matrix:
-        <<: *platform-matrix
+        otp: ["24.2"]
+        elixir: ["1.13.2"]
+        os: ["ubuntu-latest"]
         mix_env: ["dev", "test", "prod"]
     steps:
       - uses: actions/checkout@v2
@@ -64,7 +68,9 @@ jobs:
     needs: build
     strategy:
       matrix:
-        <<: *platform-matrix
+        otp: ["24.2"]
+        elixir: ["1.13.2"]
+        os: ["ubuntu-latest"]
         mix_env: ["dev", "test", "prod"]
     steps:
       - uses: actions/checkout@v2
