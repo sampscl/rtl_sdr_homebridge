@@ -2,9 +2,9 @@ name: Continuous Integration
 on:
   workflow_dispatch:
   push:
-    branches: [$default-branch]
+    branches: [develop]
   pull_request:
-    branches: [$default-branch]
+    branches: [develop]
 jobs:
   prep:
     runs-on: ubuntu-latest
