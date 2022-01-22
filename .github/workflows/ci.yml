@@ -6,9 +6,9 @@ on:
   pull_request:
     branches: [develop]
 jobs:
-  prep:
-    runs-on: ubuntu-latest
-    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    name: Build and test
     strategy:
       matrix:
         otp: ["24.2"]
@@ -20,65 +20,18 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-  build:
-    runs-on: ${{ matrix.os }}
-    name: Build
-    needs: prep
-    strategy:
-      matrix:
-        otp: ["24.2"]
-        elixir: ["1.13.2"]
-        os: ["ubuntu-latest"]
-        mix_env: ["dev", "test", "prod"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
+      - uses: actions/cache@v2
         with:
           path: deps
           key: ${{ runner.os }}-mix-${{ matrix.mix_env }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-${{ matrix.mix_env }}
       - name: Install dependencies
-        run: MIX_ENV=${{ matrix.mix_env }} mix deps.get
+        run: MIX_ENV=test mix deps.get
       - name: Build
-        run: MIX_ENV=${{ matrix.mix_env }} mix compile
-  credo_compliance:
-    runs-on: ${{ matrix.os }}
-    name: Credo Compliance
-    needs: build
-    strategy:
-      matrix:
-        otp: ["24.2"]
-        elixir: ["1.13.2"]
-        os: ["ubuntu-latest"]
-        mix_env: ["dev", "test", "prod"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-dev-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-dev
+        run: MIX_ENV=test mix compile
       - name: Compliance check
-        run: MIX_ENV=dev mix credo
-  dialyer_compliance:
-    runs-on: ${{ matrix.os }}
-    name: Dialyzer Compliance
-    needs: build
-    strategy:
-      matrix:
-        otp: ["24.2"]
-        elixir: ["1.13.2"]
-        os: ["ubuntu-latest"]
-        mix_env: ["dev", "test", "prod"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-dev-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-dev
-      - name: Compliance check
-        run: MIX_ENV=dev mix dialyzer
+        run: MIX_ENV=test mix credo
+      - name: Dialyzer check
+        run: MIX_ENV=test mix dialyzer
+      - name: Tests
+        run: MIX_ENV=test mix espec
