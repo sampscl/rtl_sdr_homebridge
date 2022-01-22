@@ -33,7 +33,7 @@ defmodule RtlSdrHomebridge.DeviceAccumulator.Worker do
   def start_link(:ok), do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
 
   defmodule DeviceData do
-    @moduledoc false
+    @moduledoc "Data describing a device"
     @keys ~w/kind zone_id first_seen last_seen/a
     @enforce_keys @keys
     defstruct @keys
