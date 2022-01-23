@@ -10,6 +10,7 @@ Currently, the only supported radio protocol is Honeywell's 345MHz system that i
 
 Before rtl-sdr homebridge will work, the following must be installed:
 
+* [MQTT](https://mqtt.org); Debian-based distros can `sudo apt install mosquitto`
 * [Homebridge](https://homebridge.io)
 * [Homebridge mqttthing plugin](https://github.com/arachnetech/homebridge-mqttthing) (this can be installed through the Homebridge GUI)
 * [RTL-SDR](https://www.rtl-sdr.com) device
